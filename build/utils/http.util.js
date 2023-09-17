@@ -39,20 +39,19 @@ var baseHeaders = {
 };
 var Http = /** @class */ (function () {
     function Http(credentials) {
-        var _this = this;
-        this._createAxiosInstance = function (baseUrl) {
+        this._creds = credentials;
+        var _createAxiosInstance = function (baseUrl, credentials) {
             var _a;
-            var _b = _this._creds._credentials || {}, accessToken = _b.accessToken, uniqueId = _b.uniqueId, location = _b.location;
+            var _b = credentials || {}, accessToken = _b.accessToken, uniqueId = _b.uniqueId, location = _b.location;
             return axios_1.default.create({
                 baseURL: baseUrl,
                 maxBodyLength: Infinity,
                 headers: __assign(__assign(__assign(__assign({}, baseHeaders), { host: (_a = baseUrl === null || baseUrl === void 0 ? void 0 : baseUrl.split("/")) === null || _a === void 0 ? void 0 : _a[2] }), (!!accessToken ? { Authorization: "Bearer ".concat(accessToken) } : {})), { "x-uniqueid": uniqueId, "x-location": location }),
             });
         };
-        this.api = this._createAxiosInstance(api_constant_1.default.API_BASE_URL);
-        this.goid = this._createAxiosInstance(api_constant_1.default.GOID_BASE_URL);
-        this.cust = this._createAxiosInstance(api_constant_1.default.CUST_BASE_URL);
-        this._creds = credentials;
+        this.api = _createAxiosInstance(api_constant_1.default.API_BASE_URL, credentials._credentials);
+        this.goid = _createAxiosInstance(api_constant_1.default.GOID_BASE_URL, credentials._credentials);
+        this.cust = _createAxiosInstance(api_constant_1.default.CUST_BASE_URL, credentials._credentials);
     }
     return Http;
 }());

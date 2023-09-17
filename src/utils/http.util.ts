@@ -1,6 +1,6 @@
-import Axios from "axios";
+import Axios, { AxiosInstance } from "axios";
 import CONST from "../constants/api.constant";
-import { Credential } from "./credential.util";
+import { Credential, ICredential } from "./credential.util";
 
 const baseHeaders = {
   "Accept-Encoding": "gzip, deflate, br",
@@ -24,26 +24,42 @@ const baseHeaders = {
 };
 export class Http {
   _creds: Credential;
+
+  api: AxiosInstance;
+  goid: AxiosInstance;
+  cust: AxiosInstance;
+
   constructor(credentials: Credential) {
     this._creds = credentials;
+
+    const _createAxiosInstance = (
+      baseUrl: string,
+      credentials: ICredential
+    ) => {
+      const { accessToken, uniqueId, location } = credentials || {};
+      return Axios.create({
+        baseURL: baseUrl,
+        maxBodyLength: Infinity,
+        headers: {
+          ...baseHeaders,
+          host: baseUrl?.split("/")?.[2],
+          ...(!!accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          "x-uniqueid": uniqueId,
+          "x-location": location,
+        },
+      });
+    };
+    this.api = _createAxiosInstance(
+      CONST.API_BASE_URL,
+      credentials._credentials
+    );
+    this.goid = _createAxiosInstance(
+      CONST.GOID_BASE_URL,
+      credentials._credentials
+    );
+    this.cust = _createAxiosInstance(
+      CONST.CUST_BASE_URL,
+      credentials._credentials
+    );
   }
-
-  _createAxiosInstance = (baseUrl: string) => {
-    const { accessToken, uniqueId, location } = this._creds._credentials || {};
-    return Axios.create({
-      baseURL: baseUrl,
-      maxBodyLength: Infinity,
-      headers: {
-        ...baseHeaders,
-        host: baseUrl?.split("/")?.[2],
-        ...(!!accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-        "x-uniqueid": uniqueId,
-        "x-location": location,
-      },
-    });
-  };
-
-  api = this._createAxiosInstance(CONST.API_BASE_URL);
-  goid = this._createAxiosInstance(CONST.GOID_BASE_URL);
-  cust = this._createAxiosInstance(CONST.CUST_BASE_URL);
 }

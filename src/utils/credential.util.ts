@@ -19,22 +19,32 @@ export interface ICredentialProps {
   localStorage?: any;
   location?: string;
   uniqueId?: string;
+  skipLocalStorage?: boolean;
 }
 
 export class Credential {
   _localStorage: any;
+  _isSkipLocalStorage?: boolean;
   _credentials: ICredential = {};
 
-  constructor(props: ICredentialProps = {}) {
-    if (props.localStorage) {
-      this._localStorage = props.localStorage;
-    } else {
-      this._localStorage = window.localStorage;
+  constructor(
+    props: ICredentialProps = {
+      skipLocalStorage: false,
     }
+  ) {
+    if (!props.skipLocalStorage) {
+      if (props.localStorage) {
+        this._localStorage = props.localStorage;
+      } else {
+        this._localStorage = window.localStorage;
+      }
+    }
+    this._isSkipLocalStorage = props.skipLocalStorage;
     this._init({ location: props.location, uniqueId: props.uniqueId });
   }
 
   _save = () => {
+    if (this._isSkipLocalStorage) return;
     this._localStorage.setItem(
       credentialsKey,
       JSON.stringify(this._credentials)
@@ -42,7 +52,6 @@ export class Credential {
   };
 
   _init = (cred: IInit = {}) => {
-    const lsCredentials = this._localStorage.getItem(credentialsKey);
     this._credentials = {
       accessToken: "",
       refreshToken: "",
@@ -50,11 +59,14 @@ export class Credential {
       uniqueId: generateUniqueId(),
       lastTokenUpdated: "",
     };
-    if (lsCredentials) {
-      try {
-        const tmp = JSON.parse(lsCredentials);
-        this._credentials = tmp;
-      } catch (error) {}
+    if (!this._isSkipLocalStorage) {
+      const lsCredentials = this._localStorage.getItem(credentialsKey);
+      if (lsCredentials) {
+        try {
+          const tmp = JSON.parse(lsCredentials);
+          this._credentials = tmp;
+        } catch (error) {}
+      }
     }
 
     this._credentials = {

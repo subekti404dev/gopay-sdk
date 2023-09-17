@@ -13,9 +13,11 @@ export interface ICredentialProps {
     localStorage?: any;
     location?: string;
     uniqueId?: string;
+    skipLocalStorage?: boolean;
 }
 export declare class Credential {
     _localStorage: any;
+    _isSkipLocalStorage?: boolean;
     _credentials: ICredential;
     constructor(props?: ICredentialProps);
     _save: () => void;
