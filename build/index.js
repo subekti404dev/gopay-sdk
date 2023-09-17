@@ -445,7 +445,7 @@ function descending(a, b)
 /***/ 836:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var util = __nccwpck_require__(837);
+var util = __nccwpck_require__(849);
 var Stream = (__nccwpck_require__(781).Stream);
 var DelayedStream = __nccwpck_require__(63);
 
@@ -661,7 +661,7 @@ CombinedStream.prototype._emitError = function(err) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var Stream = (__nccwpck_require__(781).Stream);
-var util = __nccwpck_require__(837);
+var util = __nccwpck_require__(849);
 
 module.exports = DelayedStream;
 function DelayedStream() {
@@ -1425,7 +1425,7 @@ module.exports.wrap = wrap;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var CombinedStream = __nccwpck_require__(836);
-var util = __nccwpck_require__(837);
+var util = __nccwpck_require__(849);
 var path = __nccwpck_require__(17);
 var http = __nccwpck_require__(685);
 var https = __nccwpck_require__(687);
@@ -2802,7 +2802,7 @@ const fs = __nccwpck_require__(147)
 const MurmurHash3 = __nccwpck_require__(908)
 const { onExit } = __nccwpck_require__(443)
 const path = __nccwpck_require__(17)
-const { promisify } = __nccwpck_require__(837)
+const { promisify } = __nccwpck_require__(849)
 const activeFiles = {}
 
 // if we run inside of a worker_thread, `process.pid` is not unique
@@ -3110,6 +3110,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+if (typeof localStorage === "undefined" || localStorage === null) {
+    var LocalStorage = (__nccwpck_require__(850).LocalStorage);
+    global.localStorage = new LocalStorage("./.localStorage");
+}
 var auth = __importStar(__nccwpck_require__(974));
 var bank = __importStar(__nccwpck_require__(396));
 var customer = __importStar(__nccwpck_require__(64));
@@ -3504,10 +3508,6 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setLocation = exports.setToken = exports.init = exports.getCredentials = void 0;
 var unique_id_util_1 = __nccwpck_require__(304);
-if (typeof localStorage === "undefined" || localStorage === null) {
-    var LocalStorage = (__nccwpck_require__(850).LocalStorage);
-    global.localStorage = new LocalStorage("./.localStorage");
-}
 var credentialsKey = "GOPAY_CREDENTIALS";
 var getCredentials = function () {
     var lsCredentials = localStorage.getItem(credentialsKey);
@@ -3532,7 +3532,7 @@ var getCredentials = function () {
 exports.getCredentials = getCredentials;
 var init = function (cred) {
     if (cred === void 0) { cred = {}; }
-    var credentials = __assign(__assign(__assign({}, (0, exports.getCredentials)()), !!cred.location && { location: cred.location }), !!cred.uniqueId && { uniqueId: cred.uniqueId });
+    var credentials = __assign(__assign(__assign({}, (0, exports.getCredentials)()), (!!cred.location && { location: cred.location })), (!!cred.uniqueId && { uniqueId: cred.uniqueId }));
     localStorage.setItem(credentialsKey, JSON.stringify(credentials));
     return credentials;
 };
@@ -3715,7 +3715,7 @@ module.exports = require("url");
 
 /***/ }),
 
-/***/ 837:
+/***/ 849:
 /***/ ((module) => {
 
 "use strict";
@@ -3751,7 +3751,7 @@ exports.unload = exports.load = exports.onExit = exports.signals = void 0;
 // that are in the direct sync flow of nyc's outputCoverage are
 // ignored, since we can never get coverage for them.
 // grab a reference to node's real process object right away
-const signals_js_1 = __nccwpck_require__(164);
+const signals_js_1 = __nccwpck_require__(837);
 Object.defineProperty(exports, "signals", ({ enumerable: true, get: function () { return signals_js_1.signals; } }));
 const processOk = (process) => !!process &&
     typeof process === 'object' &&
@@ -4025,7 +4025,7 @@ exports.unload = _a.unload;
 
 /***/ }),
 
-/***/ 164:
+/***/ 837:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4086,7 +4086,7 @@ const url = __nccwpck_require__(310);
 const proxyFromEnv = __nccwpck_require__(621);
 const http = __nccwpck_require__(685);
 const https = __nccwpck_require__(687);
-const util = __nccwpck_require__(837);
+const util = __nccwpck_require__(849);
 const followRedirects = __nccwpck_require__(754);
 const zlib = __nccwpck_require__(796);
 const stream = __nccwpck_require__(781);

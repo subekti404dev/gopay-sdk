@@ -2,11 +2,6 @@ import { generateUniqueId } from "./unique-id.util";
 
 declare var localStorage: any;
 
-if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require("node-localstorage").LocalStorage;
-  (global as any).localStorage = new LocalStorage("./.localStorage");
-}
-
 const credentialsKey = "GOPAY_CREDENTIALS";
 
 export interface IInit {
@@ -45,8 +40,8 @@ export const getCredentials: () => ICredential = () => {
 export const init: (credential?: IInit) => ICredential = (cred = {}) => {
   const credentials = {
     ...getCredentials(),
-    ...!!cred.location && {location: cred.location},
-    ...!!cred.uniqueId && {uniqueId: cred.uniqueId},
+    ...(!!cred.location && { location: cred.location }),
+    ...(!!cred.uniqueId && { uniqueId: cred.uniqueId }),
   };
   localStorage.setItem(credentialsKey, JSON.stringify(credentials));
 
