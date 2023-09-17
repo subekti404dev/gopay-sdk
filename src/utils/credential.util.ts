@@ -9,6 +9,11 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 
 const credentialsKey = "GOPAY_CREDENTIALS";
 
+export interface IInit {
+  location?: string;
+  uniqueId?: string;
+}
+
 export interface ICredential {
   accessToken?: string;
   refreshToken?: string;
@@ -22,7 +27,7 @@ export const getCredentials: () => ICredential = () => {
   const credentials = {
     accessToken: "",
     refreshToken: "",
-    location: "-6.9314517,106.6378065",
+    location: "-6.2438422,106.8026804",
     uniqueId: generateUniqueId(),
     lastTokenUpdated: "",
   };
@@ -37,13 +42,11 @@ export const getCredentials: () => ICredential = () => {
   }
 };
 
-export const init: (credential?: ICredential) => ICredential = (cred = {}) => {
+export const init: (credential?: IInit) => ICredential = (cred = {}) => {
   const credentials = {
-    accessToken: cred.accessToken || "",
-    refreshToken: cred.refreshToken || "",
-    location: cred.location || "-6.2438422,106.8026804",
-    uniqueId: cred.uniqueId || generateUniqueId(),
-    lastTokenUpdated: "",
+    ...getCredentials(),
+    ...!!cred.location && {location: cred.location},
+    ...!!cred.uniqueId && {uniqueId: cred.uniqueId},
   };
   localStorage.setItem(credentialsKey, JSON.stringify(credentials));
 

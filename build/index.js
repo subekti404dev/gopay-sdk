@@ -3514,7 +3514,7 @@ var getCredentials = function () {
     var credentials = {
         accessToken: "",
         refreshToken: "",
-        location: "-6.9314517,106.6378065",
+        location: "-6.2438422,106.8026804",
         uniqueId: (0, unique_id_util_1.generateUniqueId)(),
         lastTokenUpdated: "",
     };
@@ -3532,13 +3532,7 @@ var getCredentials = function () {
 exports.getCredentials = getCredentials;
 var init = function (cred) {
     if (cred === void 0) { cred = {}; }
-    var credentials = {
-        accessToken: cred.accessToken || "",
-        refreshToken: cred.refreshToken || "",
-        location: cred.location || "-6.2438422,106.8026804",
-        uniqueId: cred.uniqueId || (0, unique_id_util_1.generateUniqueId)(),
-        lastTokenUpdated: "",
-    };
+    var credentials = __assign(__assign(__assign({}, (0, exports.getCredentials)()), !!cred.location && { location: cred.location }), !!cred.uniqueId && { uniqueId: cred.uniqueId });
     localStorage.setItem(credentialsKey, JSON.stringify(credentials));
     return credentials;
 };

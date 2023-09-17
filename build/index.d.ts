@@ -5,6 +5,6 @@ declare const gopay: {
     auth: typeof auth;
     bank: typeof bank;
     customer: typeof customer;
-    init: (credential?: import("./utils/credential.util").ICredential | undefined) => import("./utils/credential.util").ICredential;
+    init: (credential?: import("./utils/credential.util").IInit | undefined) => import("./utils/credential.util").ICredential;
 };
 export default gopay;
