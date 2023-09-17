@@ -7237,6 +7237,7 @@ var Gopay = /** @class */ (function () {
     }
     return Gopay;
 }());
+exports["default"] = Gopay;
 
 })();
 

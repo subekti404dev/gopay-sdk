@@ -20,3 +20,5 @@ class Gopay {
     this.bank = new BankService(this._http);
   }
 }
+
+export default Gopay;
