@@ -11,48 +11,54 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setLocation = exports.setToken = exports.init = exports.getCredentials = void 0;
+exports.Credential = void 0;
 var unique_id_util_1 = require("./unique-id.util");
 var credentialsKey = "GOPAY_CREDENTIALS";
-var getCredentials = function () {
-    var lsCredentials = localStorage.getItem(credentialsKey);
-    var credentials = {
-        accessToken: "",
-        refreshToken: "",
-        location: "-6.2438422,106.8026804",
-        uniqueId: (0, unique_id_util_1.generateUniqueId)(),
-        lastTokenUpdated: "",
-    };
-    if (!localStorage.getItem(credentialsKey)) {
-        localStorage.setItem(credentialsKey, JSON.stringify(credentials));
-        return credentials;
+var Credential = /** @class */ (function () {
+    function Credential(props) {
+        var _this = this;
+        if (props === void 0) { props = {}; }
+        this._credentials = {};
+        this._save = function () {
+            _this._localStorage.setItem(credentialsKey, JSON.stringify(_this._credentials));
+        };
+        this._init = function (cred) {
+            if (cred === void 0) { cred = {}; }
+            var lsCredentials = _this._localStorage.getItem(credentialsKey);
+            _this._credentials = {
+                accessToken: "",
+                refreshToken: "",
+                location: "-6.2438422,106.8026804",
+                uniqueId: (0, unique_id_util_1.generateUniqueId)(),
+                lastTokenUpdated: "",
+            };
+            if (lsCredentials) {
+                try {
+                    var tmp = JSON.parse(lsCredentials);
+                    _this._credentials = tmp;
+                }
+                catch (error) { }
+            }
+            _this._credentials = __assign(__assign(__assign({}, _this._credentials), (!!cred.location && { location: cred.location })), (!!cred.uniqueId && { uniqueId: cred.uniqueId }));
+            _this._save();
+        };
+        this.getCredentials = function () {
+            return _this._credentials;
+        };
+        this.setToken = function (accessToken, refreshToken) {
+            _this._credentials = __assign(__assign(__assign({}, _this._credentials), (!!accessToken && { accessToken: accessToken })), (!!refreshToken && { refreshToken: refreshToken }));
+            _this._save();
+            return _this._credentials;
+        };
+        if (props.localStorage) {
+            this._localStorage = props.localStorage;
+        }
+        else {
+            this._localStorage = window.localStorage;
+        }
+        this._init({ location: props.location, uniqueId: props.uniqueId });
     }
-    try {
-        return JSON.parse(lsCredentials);
-    }
-    catch (error) {
-        return credentials;
-    }
-};
-exports.getCredentials = getCredentials;
-var init = function (cred) {
-    if (cred === void 0) { cred = {}; }
-    var credentials = __assign(__assign(__assign({}, (0, exports.getCredentials)()), (!!cred.location && { location: cred.location })), (!!cred.uniqueId && { uniqueId: cred.uniqueId }));
-    localStorage.setItem(credentialsKey, JSON.stringify(credentials));
-    return credentials;
-};
-exports.init = init;
-var setToken = function (accessToken, refreshToken) {
-    var newCredentials = __assign(__assign({}, (0, exports.getCredentials)()), { accessToken: accessToken, refreshToken: refreshToken, lastTokenUpdated: Date.now().toString() });
-    localStorage.setItem(credentialsKey, JSON.stringify(newCredentials));
-    return newCredentials;
-};
-exports.setToken = setToken;
-var setLocation = function (location) {
-    var newCredentials = __assign(__assign({}, (0, exports.getCredentials)()), { location: location });
-    localStorage.setItem(credentialsKey, JSON.stringify(newCredentials));
-    return newCredentials;
-};
-exports.setLocation = setLocation;
-// console.log(getCredentials());
+    return Credential;
+}());
+exports.Credential = Credential;
 //# sourceMappingURL=credential.util.js.map

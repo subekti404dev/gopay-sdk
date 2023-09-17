@@ -36,31 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBalances = exports.getCustomerInfo = void 0;
-var http_util_1 = require("../utils/http.util");
-var getCustomerInfo = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpApi.get("/gojek/v2/customer")];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.getCustomerInfo = getCustomerInfo;
-var getBalances = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpCust.get("v1/payment-options/balances")];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.getBalances = getBalances;
-// getBalances().then(b => console.log(b.data));
+exports.CustomerService = void 0;
+var CustomerService = /** @class */ (function () {
+    function CustomerService(http) {
+        var _this = this;
+        this.getCustomerInfo = function () { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.api.get("/gojek/v2/customer")];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this.getBalances = function () { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.cust.get("v1/payment-options/balances")];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this._http = http;
+    }
+    return CustomerService;
+}());
+exports.CustomerService = CustomerService;
 //# sourceMappingURL=customer.service.js.map

@@ -4,12 +4,11 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "ncc build src/index.ts -o build",
+    "build": "tsc",
     "prepare": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.6.2",
-    "@vercel/ncc": "^0.38.0",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {

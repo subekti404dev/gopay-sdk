@@ -50,158 +50,159 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.refreshToken = exports.setPin = exports.verifyOTP = exports.retryOTP = exports.requestOTP = void 0;
-var http_util_1 = require("../utils/http.util");
+exports.AuthService = void 0;
 var api_constant_1 = __importDefault(require("../constants/api.constant"));
-var credential_util_1 = require("../utils/credential.util");
-var requestOTP = function (phoneNumber) { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpGoid.post("/goid/login/request", {
-                    client_id: api_constant_1.default.CLIENT_ID,
-                    client_secret: api_constant_1.default.CLIENT_SECRET,
-                    country_code: "+62",
-                    magic_link_ref: "",
-                    phone_number: phoneNumber,
-                })];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.requestOTP = requestOTP;
-var retryOTP = function (otpToken) { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpApi.post("/otp/retry", {
-                    otp_token: otpToken,
-                })];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.retryOTP = retryOTP;
-var verifyOTP = function (otp, otpToken) { return __awaiter(void 0, void 0, void 0, function () {
-    var res, _a, access_token, refresh_token, error_1, firstError;
-    var _b, _c, _d, _e, _f, _g, _h, _j;
-    return __generator(this, function (_k) {
-        switch (_k.label) {
-            case 0:
-                _k.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, http_util_1.httpGoid.post("/goid/token", {
-                        client_id: api_constant_1.default.CLIENT_ID,
-                        client_secret: api_constant_1.default.CLIENT_SECRET,
-                        data: { otp: otp, otp_token: otpToken },
-                        grant_type: "otp",
-                        scopes: [],
-                    })];
-            case 1:
-                res = _k.sent();
-                if ((_b = res.data) === null || _b === void 0 ? void 0 : _b.access_token) {
-                    _a = res.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
-                    (0, credential_util_1.setToken)(access_token, refresh_token);
+var AuthService = /** @class */ (function () {
+    function AuthService(http, credentials) {
+        var _this = this;
+        this.requestOTP = function (phoneNumber) { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.goid.post("/goid/login/request", {
+                            client_id: api_constant_1.default.CLIENT_ID,
+                            client_secret: api_constant_1.default.CLIENT_SECRET,
+                            country_code: "+62",
+                            magic_link_ref: "",
+                            phone_number: phoneNumber,
+                        })];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
                 }
-                return [2 /*return*/, __assign({ next_action: null }, res.data)];
-            case 2:
-                error_1 = _k.sent();
-                firstError = (_e = (_d = (_c = error_1 === null || error_1 === void 0 ? void 0 : error_1.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.errors) === null || _e === void 0 ? void 0 : _e[0];
-                if ((firstError === null || firstError === void 0 ? void 0 : firstError.code) === "mfa:customer_send_challenge:challenge_required") {
-                    return [2 /*return*/, {
-                            next_action: "set_pin",
-                            challenge_token: (_f = firstError === null || firstError === void 0 ? void 0 : firstError.details) === null || _f === void 0 ? void 0 : _f.challenge_token,
-                            challenge_id: (_j = (_h = (_g = firstError === null || firstError === void 0 ? void 0 : firstError.details) === null || _g === void 0 ? void 0 : _g.challenges) === null || _h === void 0 ? void 0 : _h[0]) === null || _j === void 0 ? void 0 : _j.gopay_challenge_id,
-                        }];
+            });
+        }); };
+        this.retryOTP = function (otpToken) { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.api.post("/otp/retry", {
+                            otp_token: otpToken,
+                        })];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
                 }
-                else {
-                    throw error_1;
+            });
+        }); };
+        this.verifyOTP = function (otp, otpToken) { return __awaiter(_this, void 0, void 0, function () {
+            var res, _a, access_token, refresh_token, error_1, firstError;
+            var _b, _c, _d, _e, _f, _g, _h, _j;
+            return __generator(this, function (_k) {
+                switch (_k.label) {
+                    case 0:
+                        _k.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this._http.goid.post("/goid/token", {
+                                client_id: api_constant_1.default.CLIENT_ID,
+                                client_secret: api_constant_1.default.CLIENT_SECRET,
+                                data: { otp: otp, otp_token: otpToken },
+                                grant_type: "otp",
+                                scopes: [],
+                            })];
+                    case 1:
+                        res = _k.sent();
+                        if ((_b = res.data) === null || _b === void 0 ? void 0 : _b.access_token) {
+                            _a = res.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
+                            this._credentials.setToken(access_token, refresh_token);
+                        }
+                        return [2 /*return*/, __assign({ next_action: null }, res.data)];
+                    case 2:
+                        error_1 = _k.sent();
+                        firstError = (_e = (_d = (_c = error_1 === null || error_1 === void 0 ? void 0 : error_1.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.errors) === null || _e === void 0 ? void 0 : _e[0];
+                        if ((firstError === null || firstError === void 0 ? void 0 : firstError.code) === "mfa:customer_send_challenge:challenge_required") {
+                            return [2 /*return*/, {
+                                    next_action: "set_pin",
+                                    challenge_token: (_f = firstError === null || firstError === void 0 ? void 0 : firstError.details) === null || _f === void 0 ? void 0 : _f.challenge_token,
+                                    challenge_id: (_j = (_h = (_g = firstError === null || firstError === void 0 ? void 0 : firstError.details) === null || _g === void 0 ? void 0 : _g.challenges) === null || _h === void 0 ? void 0 : _h[0]) === null || _j === void 0 ? void 0 : _j.gopay_challenge_id,
+                                }];
+                        }
+                        else {
+                            throw error_1;
+                        }
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.verifyOTP = verifyOTP;
-var setPin = function (pin, challangeId, challangeToken) { return __awaiter(void 0, void 0, void 0, function () {
-    var res, token, resp, _a, access_token, refresh_token;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpCust.post("api/v1/users/pin/tokens", {
-                    pin: pin,
-                    client_id: api_constant_1.default.MFA_CLIENT_ID,
-                    challenge_id: challangeId,
-                })];
-            case 1:
-                res = _b.sent();
-                if (!res.data) return [3 /*break*/, 3];
-                token = res.data.data.token;
-                if (!token) return [3 /*break*/, 3];
-                return [4 /*yield*/, http_util_1.httpGoid.post("/goid/token", {
-                        client_id: api_constant_1.default.CLIENT_ID,
-                        client_secret: api_constant_1.default.CLIENT_SECRET,
-                        data: {
-                            challenge_token: challangeToken,
-                            challenges: [
-                                {
-                                    name: "GoPay Pin 2FA",
-                                    value: token,
+            });
+        }); };
+        this.setPin = function (pin, challangeId, challangeToken) { return __awaiter(_this, void 0, void 0, function () {
+            var res, token, resp, _a, access_token, refresh_token;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this._http.cust.post("api/v1/users/pin/tokens", {
+                            pin: pin,
+                            client_id: api_constant_1.default.MFA_CLIENT_ID,
+                            challenge_id: challangeId,
+                        })];
+                    case 1:
+                        res = _b.sent();
+                        if (!res.data) return [3 /*break*/, 3];
+                        token = res.data.data.token;
+                        if (!token) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this._http.goid.post("/goid/token", {
+                                client_id: api_constant_1.default.CLIENT_ID,
+                                client_secret: api_constant_1.default.CLIENT_SECRET,
+                                data: {
+                                    challenge_token: challangeToken,
+                                    challenges: [
+                                        {
+                                            name: "GoPay Pin 2FA",
+                                            value: token,
+                                        },
+                                    ],
                                 },
-                            ],
-                        },
-                        grant_type: "challenge",
-                    })];
-            case 2:
-                resp = _b.sent();
-                _a = resp.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
-                (0, credential_util_1.setToken)(access_token, refresh_token);
-                return [2 /*return*/, resp.data];
-            case 3: return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.setPin = setPin;
-var refreshToken = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var res, _a, access_token, refresh_token;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpGoid.post("/goid/token", {
-                    client_id: api_constant_1.default.CLIENT_ID,
-                    client_secret: api_constant_1.default.CLIENT_SECRET,
-                    data: { refresh_token: (0, credential_util_1.getCredentials)().refreshToken },
-                    grant_type: "refresh_token",
-                    scopes: [],
-                })];
-            case 1:
-                res = _b.sent();
-                if (res.data) {
-                    _a = res.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
-                    (0, credential_util_1.setToken)(access_token, refresh_token);
+                                grant_type: "challenge",
+                            })];
+                    case 2:
+                        resp = _b.sent();
+                        _a = resp.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
+                        this._credentials.setToken(access_token, refresh_token);
+                        return [2 /*return*/, resp.data];
+                    case 3: return [2 /*return*/, res.data];
                 }
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.refreshToken = refreshToken;
-var logout = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpGoid.delete("/goid/token", {
-                    headers: {
-                        "x-clientsecret": api_constant_1.default.CLIENT_SECRET,
-                        "x-clientname": "gopay:consumer:app",
-                    },
-                })];
-            case 1:
-                res = _a.sent();
-                (0, credential_util_1.setToken)("", "");
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.logout = logout;
+            });
+        }); };
+        this.refreshToken = function () { return __awaiter(_this, void 0, void 0, function () {
+            var res, _a, access_token, refresh_token;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this._http.goid.post("/goid/token", {
+                            client_id: api_constant_1.default.CLIENT_ID,
+                            client_secret: api_constant_1.default.CLIENT_SECRET,
+                            data: { refresh_token: this._credentials._credentials.refreshToken },
+                            grant_type: "refresh_token",
+                            scopes: [],
+                        })];
+                    case 1:
+                        res = _b.sent();
+                        if (res.data) {
+                            _a = res.data, access_token = _a.access_token, refresh_token = _a.refresh_token;
+                            this._credentials.setToken(access_token, refresh_token);
+                        }
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this.logout = function () { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.goid.delete("/goid/token", {
+                            headers: {
+                                "x-clientsecret": api_constant_1.default.CLIENT_SECRET,
+                                "x-clientname": "gopay:consumer:app",
+                            },
+                        })];
+                    case 1:
+                        res = _a.sent();
+                        this._credentials.setToken("", "");
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this._http = http;
+        this._credentials = credentials;
+    }
+    return AuthService;
+}());
+exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

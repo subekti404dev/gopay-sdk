@@ -36,31 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateBankAccount = exports.getBanks = void 0;
-var http_util_1 = require("../utils/http.util");
-var getBanks = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpCust.get("/v1/banks?type=transfer")];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.getBanks = getBanks;
-var validateBankAccount = function (bankCode, accountNumber) { return __awaiter(void 0, void 0, void 0, function () {
-    var res;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, http_util_1.httpCust.get("v1/bank-accounts/validate?bank_code=".concat(bankCode, "&account_number=").concat(accountNumber))];
-            case 1:
-                res = _a.sent();
-                return [2 /*return*/, res.data];
-        }
-    });
-}); };
-exports.validateBankAccount = validateBankAccount;
-// getBanks().then((b) => console.log(b));
+exports.BankService = void 0;
+var BankService = /** @class */ (function () {
+    function BankService(http) {
+        var _this = this;
+        this.getBanks = function () { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.cust.get("/v1/banks?type=transfer")];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this.validateBankAccount = function (bankCode, accountNumber) { return __awaiter(_this, void 0, void 0, function () {
+            var res;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this._http.cust.get("v1/bank-accounts/validate?bank_code=".concat(bankCode, "&account_number=").concat(accountNumber))];
+                    case 1:
+                        res = _a.sent();
+                        return [2 /*return*/, res.data];
+                }
+            });
+        }); };
+        this._http = http;
+    }
+    return BankService;
+}());
+exports.BankService = BankService;
 //# sourceMappingURL=bank.service.js.map

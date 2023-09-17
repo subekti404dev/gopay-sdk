@@ -14,10 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpCust = exports.httpGoid = exports.httpApi = void 0;
+exports.Http = void 0;
 var axios_1 = __importDefault(require("axios"));
 var api_constant_1 = __importDefault(require("../constants/api.constant"));
-var credential_util_1 = require("./credential.util");
 var baseHeaders = {
     "Accept-Encoding": "gzip, deflate, br",
     "x-location-accuracy": "20.0",
@@ -38,17 +37,24 @@ var baseHeaders = {
     "x-phonemodel": "Xiaomi, M2010J19SG",
     "x-platform": "Android",
 };
-var http = function (baseUrl) {
-    var _a;
-    return axios_1.default.create({
-        baseURL: baseUrl,
-        maxBodyLength: Infinity,
-        headers: __assign(__assign(__assign(__assign({}, baseHeaders), { host: (_a = baseUrl === null || baseUrl === void 0 ? void 0 : baseUrl.split("/")) === null || _a === void 0 ? void 0 : _a[2] }), ((0, credential_util_1.getCredentials)().accessToken
-            ? { Authorization: "Bearer ".concat((0, credential_util_1.getCredentials)().accessToken) }
-            : {})), { "x-uniqueid": (0, credential_util_1.getCredentials)().uniqueId, "x-location": (0, credential_util_1.getCredentials)().location }),
-    });
-};
-exports.httpApi = http(api_constant_1.default.API_BASE_URL);
-exports.httpGoid = http(api_constant_1.default.GOID_BASE_URL);
-exports.httpCust = http(api_constant_1.default.CUST_BASE_URL);
+var Http = /** @class */ (function () {
+    function Http(credentials) {
+        var _this = this;
+        this._createAxiosInstance = function (baseUrl) {
+            var _a;
+            var _b = _this._creds._credentials || {}, accessToken = _b.accessToken, uniqueId = _b.uniqueId, location = _b.location;
+            return axios_1.default.create({
+                baseURL: baseUrl,
+                maxBodyLength: Infinity,
+                headers: __assign(__assign(__assign(__assign({}, baseHeaders), { host: (_a = baseUrl === null || baseUrl === void 0 ? void 0 : baseUrl.split("/")) === null || _a === void 0 ? void 0 : _a[2] }), (!!accessToken ? { Authorization: "Bearer ".concat(accessToken) } : {})), { "x-uniqueid": uniqueId, "x-location": location }),
+            });
+        };
+        this.api = this._createAxiosInstance(api_constant_1.default.API_BASE_URL);
+        this.goid = this._createAxiosInstance(api_constant_1.default.GOID_BASE_URL);
+        this.cust = this._createAxiosInstance(api_constant_1.default.CUST_BASE_URL);
+        this._creds = credentials;
+    }
+    return Http;
+}());
+exports.Http = Http;
 //# sourceMappingURL=http.util.js.map
