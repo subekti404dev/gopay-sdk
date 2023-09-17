@@ -14,7 +14,7 @@ class Gopay {
 
   constructor(props?: ICredentialProps) {
     this._credentials = new Credential(props);
-    this._http = new Http(this._credentials);
+    this._http = new Http(this._credentials, props?.proxy);
     this.auth = new AuthService(this._http, this._credentials);
     this.customer = new CustomerService(this._http);
     this.bank = new BankService(this._http);

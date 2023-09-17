@@ -9,11 +9,17 @@ export interface ICredential {
     uniqueId?: string;
     lastTokenUpdated?: string;
 }
+export interface IProxy {
+    api?: string;
+    goid?: string;
+    cust?: string;
+}
 export interface ICredentialProps {
     localStorage?: any;
     location?: string;
     uniqueId?: string;
     skipLocalStorage?: boolean;
+    proxy?: IProxy;
 }
 export declare class Credential {
     _localStorage: any;
