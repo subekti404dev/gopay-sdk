@@ -1,6 +1,6 @@
 import Axios from "axios";
 import CONST from "../constants/api.constant";
-import { getCredentials } from "./credential.util";
+import { Credential } from "./credential.util";
 
 const baseHeaders = {
   "Accept-Encoding": "gzip, deflate, br",
@@ -22,21 +22,28 @@ const baseHeaders = {
   "x-phonemodel": "Xiaomi, M2010J19SG",
   "x-platform": "Android",
 };
-const http = (baseUrl: string) =>
-  Axios.create({
-    baseURL: baseUrl,
-    maxBodyLength: Infinity,
-    headers: {
-      ...baseHeaders,
-      host: baseUrl?.split("/")?.[2],
-      ...(getCredentials().accessToken
-        ? { Authorization: `Bearer ${getCredentials().accessToken}` }
-        : {}),
-      "x-uniqueid": getCredentials().uniqueId,
-      "x-location": getCredentials().location,
-    },
-  });
+export class Http {
+  _creds: Credential;
+  constructor(credentials: Credential) {
+    this._creds = credentials;
+  }
 
-export const httpApi = http(CONST.API_BASE_URL);
-export const httpGoid = http(CONST.GOID_BASE_URL);
-export const httpCust = http(CONST.CUST_BASE_URL);
+  _createAxiosInstance = (baseUrl: string) => {
+    const { accessToken, uniqueId, location } = this._creds._credentials || {};
+    return Axios.create({
+      baseURL: baseUrl,
+      maxBodyLength: Infinity,
+      headers: {
+        ...baseHeaders,
+        host: baseUrl?.split("/")?.[2],
+        ...(!!accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        "x-uniqueid": uniqueId,
+        "x-location": location,
+      },
+    });
+  };
+
+  api = this._createAxiosInstance(CONST.API_BASE_URL);
+  goid = this._createAxiosInstance(CONST.GOID_BASE_URL);
+  cust = this._createAxiosInstance(CONST.CUST_BASE_URL);
+}

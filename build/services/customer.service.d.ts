@@ -1,3 +1,8 @@
 import { ICustomer, IBalances } from "../models/customer.model";
-export declare const getCustomerInfo: () => Promise<ICustomer>;
-export declare const getBalances: () => Promise<IBalances>;
+import { Http } from "../utils/http.util";
+export declare class CustomerService {
+    _http: Http;
+    constructor(http: Http);
+    getCustomerInfo: () => Promise<ICustomer>;
+    getBalances: () => Promise<IBalances>;
+}

@@ -9,7 +9,17 @@ export interface ICredential {
     uniqueId?: string;
     lastTokenUpdated?: string;
 }
-export declare const getCredentials: () => ICredential;
-export declare const init: (credential?: IInit) => ICredential;
-export declare const setToken: (accessToken: string, refreshToken: string) => ICredential;
-export declare const setLocation: (location: string) => ICredential;
+export interface ICredentialProps {
+    localStorage?: any;
+    location?: string;
+    uniqueId?: string;
+}
+export declare class Credential {
+    _localStorage: any;
+    _credentials: ICredential;
+    constructor(props?: ICredentialProps);
+    _save: () => void;
+    _init: (cred?: IInit) => void;
+    getCredentials: () => ICredential;
+    setToken: (accessToken: string, refreshToken: string) => ICredential;
+}

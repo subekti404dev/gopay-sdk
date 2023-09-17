@@ -1,3 +1,8 @@
 import { IBanks, IValidateBankAccount } from "../models/bank.model";
-export declare const getBanks: () => Promise<IBanks>;
-export declare const validateBankAccount: (bankCode: string, accountNumber: string) => Promise<IValidateBankAccount>;
+import { Http } from "../utils/http.util";
+export declare class BankService {
+    _http: Http;
+    constructor(http: Http);
+    getBanks: () => Promise<IBanks>;
+    validateBankAccount: (bankCode: string, accountNumber: string) => Promise<IValidateBankAccount>;
+}

@@ -1,7 +1,5 @@
 import { generateUniqueId } from "./unique-id.util";
 
-declare var localStorage: any;
-
 const credentialsKey = "GOPAY_CREDENTIALS";
 
 export interface IInit {
@@ -17,59 +15,68 @@ export interface ICredential {
   lastTokenUpdated?: string;
 }
 
-export const getCredentials: () => ICredential = () => {
-  const lsCredentials = localStorage.getItem(credentialsKey);
-  const credentials = {
-    accessToken: "",
-    refreshToken: "",
-    location: "-6.2438422,106.8026804",
-    uniqueId: generateUniqueId(),
-    lastTokenUpdated: "",
-  };
-  if (!localStorage.getItem(credentialsKey)) {
-    localStorage.setItem(credentialsKey, JSON.stringify(credentials));
-    return credentials;
+export interface ICredentialProps {
+  localStorage?: any;
+  location?: string;
+  uniqueId?: string;
+}
+
+export class Credential {
+  _localStorage: any;
+  _credentials: ICredential = {};
+
+  constructor(props: ICredentialProps = {}) {
+    if (props.localStorage) {
+      this._localStorage = props.localStorage;
+    } else {
+      this._localStorage = window.localStorage;
+    }
+    this._init({ location: props.location, uniqueId: props.uniqueId });
   }
-  try {
-    return JSON.parse(lsCredentials);
-  } catch (error) {
-    return credentials;
-  }
-};
 
-export const init: (credential?: IInit) => ICredential = (cred = {}) => {
-  const credentials = {
-    ...getCredentials(),
-    ...(!!cred.location && { location: cred.location }),
-    ...(!!cred.uniqueId && { uniqueId: cred.uniqueId }),
+  _save = () => {
+    this._localStorage.setItem(
+      credentialsKey,
+      JSON.stringify(this._credentials)
+    );
   };
-  localStorage.setItem(credentialsKey, JSON.stringify(credentials));
 
-  return credentials;
-};
+  _init = (cred: IInit = {}) => {
+    const lsCredentials = this._localStorage.getItem(credentialsKey);
+    this._credentials = {
+      accessToken: "",
+      refreshToken: "",
+      location: "-6.2438422,106.8026804",
+      uniqueId: generateUniqueId(),
+      lastTokenUpdated: "",
+    };
+    if (lsCredentials) {
+      try {
+        const tmp = JSON.parse(lsCredentials);
+        this._credentials = tmp;
+      } catch (error) {}
+    }
 
-export const setToken: (
-  accessToken: string,
-  refreshToken: string
-) => ICredential = (accessToken: string, refreshToken: string) => {
-  const newCredentials = {
-    ...getCredentials(),
-    accessToken,
-    refreshToken,
-    lastTokenUpdated: Date.now().toString(),
+    this._credentials = {
+      ...this._credentials,
+      ...(!!cred.location && { location: cred.location }),
+      ...(!!cred.uniqueId && { uniqueId: cred.uniqueId }),
+    };
+
+    this._save();
   };
-  localStorage.setItem(credentialsKey, JSON.stringify(newCredentials));
-  return newCredentials;
-};
 
-export const setLocation: (location: string) => ICredential = (
-  location: string
-) => {
-  const newCredentials = {
-    ...getCredentials(),
-    location,
+  getCredentials = () => {
+    return this._credentials;
   };
-  localStorage.setItem(credentialsKey, JSON.stringify(newCredentials));
-  return newCredentials;
-};
-// console.log(getCredentials());
+
+  setToken = (accessToken: string, refreshToken: string) => {
+    this._credentials = {
+      ...this._credentials,
+      ...(!!accessToken && { accessToken }),
+      ...(!!refreshToken && { refreshToken }),
+    };
+    this._save();
+    return this._credentials;
+  };
+}
