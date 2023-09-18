@@ -33,3 +33,19 @@ interface ValidationData {
   account_name: string;
   display_account_name: string;
 }
+
+export interface ITransferFee {
+  data: {
+    defaut_fee: Fee;
+    amount: Fee;
+    total_amount: Fee;
+    service_fee: Fee;
+  };
+  success: boolean;
+}
+
+interface Fee {
+  value: number;
+  currency: string;
+  display_value: string;
+}
