@@ -25,7 +25,7 @@ export interface ICredentialProps {
   location?: string;
   uniqueId?: string;
   skipLocalStorage?: boolean;
-  proxy?: IProxy;
+  proxy?: string;
 }
 
 export class Credential {

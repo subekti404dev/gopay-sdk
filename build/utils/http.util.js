@@ -49,9 +49,10 @@ var Http = /** @class */ (function () {
                 headers: __assign(__assign(__assign(__assign({}, baseHeaders), { host: (_a = baseUrl === null || baseUrl === void 0 ? void 0 : baseUrl.split("/")) === null || _a === void 0 ? void 0 : _a[2] }), (!!accessToken ? { Authorization: "Bearer ".concat(accessToken) } : {})), { "x-uniqueid": uniqueId, "x-location": location }),
             });
         };
-        this.api = _createAxiosInstance((proxy === null || proxy === void 0 ? void 0 : proxy.api) || api_constant_1.default.API_BASE_URL, credentials._credentials);
-        this.goid = _createAxiosInstance((proxy === null || proxy === void 0 ? void 0 : proxy.goid) || api_constant_1.default.GOID_BASE_URL, credentials._credentials);
-        this.cust = _createAxiosInstance((proxy === null || proxy === void 0 ? void 0 : proxy.cust) || api_constant_1.default.CUST_BASE_URL, credentials._credentials);
+        var getUrl = function (url) { return (!!proxy ? proxy + url : url); };
+        this.api = _createAxiosInstance(getUrl(api_constant_1.default.API_BASE_URL), credentials._credentials);
+        this.goid = _createAxiosInstance(getUrl(api_constant_1.default.GOID_BASE_URL), credentials._credentials);
+        this.cust = _createAxiosInstance(getUrl(api_constant_1.default.CUST_BASE_URL), credentials._credentials);
     }
     return Http;
 }());

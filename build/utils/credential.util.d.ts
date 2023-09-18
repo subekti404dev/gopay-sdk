@@ -19,7 +19,7 @@ export interface ICredentialProps {
     location?: string;
     uniqueId?: string;
     skipLocalStorage?: boolean;
-    proxy?: IProxy;
+    proxy?: string;
 }
 export declare class Credential {
     _localStorage: any;

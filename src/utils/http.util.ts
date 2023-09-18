@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance } from "axios";
 import CONST from "../constants/api.constant";
-import { Credential, ICredential, IProxy } from "./credential.util";
+import { Credential, ICredential } from "./credential.util";
 
 const baseHeaders = {
   "Accept-Encoding": "gzip, deflate, br",
@@ -29,7 +29,7 @@ export class Http {
   goid: AxiosInstance;
   cust: AxiosInstance;
 
-  constructor(credentials: Credential, proxy?: IProxy) {
+  constructor(credentials: Credential, proxy?: string) {
     this._creds = credentials;
 
     const _createAxiosInstance = (
@@ -49,16 +49,19 @@ export class Http {
         },
       });
     };
+
+    const getUrl = (url) => (!!proxy ? proxy + url : url);
+
     this.api = _createAxiosInstance(
-      proxy?.api || CONST.API_BASE_URL,
+      getUrl(CONST.API_BASE_URL),
       credentials._credentials
     );
     this.goid = _createAxiosInstance(
-      proxy?.goid || CONST.GOID_BASE_URL,
+      getUrl(CONST.GOID_BASE_URL),
       credentials._credentials
     );
     this.cust = _createAxiosInstance(
-      proxy?.cust || CONST.CUST_BASE_URL,
+      getUrl(CONST.CUST_BASE_URL),
       credentials._credentials
     );
   }
