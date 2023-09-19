@@ -49,3 +49,10 @@ interface Fee {
   currency: string;
   display_value: string;
 }
+
+export interface ITransferChallenge {
+  data: {
+    challenge_id: string;
+    client_id: string;
+  };
+}
