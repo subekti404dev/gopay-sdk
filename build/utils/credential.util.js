@@ -52,7 +52,7 @@ var Credential = /** @class */ (function () {
             return _this._credentials;
         };
         this.setToken = function (accessToken, refreshToken) {
-            _this._credentials = __assign(__assign(__assign({}, _this._credentials), (!!accessToken && { accessToken: accessToken })), (!!refreshToken && { refreshToken: refreshToken }));
+            _this._credentials = __assign(__assign(__assign(__assign({}, _this._credentials), (!!accessToken && { accessToken: accessToken })), (!!refreshToken && { refreshToken: refreshToken })), { lastTokenUpdated: (new Date().getTime() / 1000).toString() });
             _this._save();
             return _this._credentials;
         };

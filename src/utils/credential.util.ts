@@ -93,6 +93,7 @@ export class Credential {
       ...this._credentials,
       ...(!!accessToken && { accessToken }),
       ...(!!refreshToken && { refreshToken }),
+      lastTokenUpdated: (new Date().getTime() / 1000).toString()
     };
     this._save();
     return this._credentials;
