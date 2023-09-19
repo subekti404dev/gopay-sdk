@@ -25,7 +25,7 @@ export interface IBalances {
     data: BalanceData[];
     success: boolean;
 }
-interface BalanceData {
+export interface BalanceData {
     balance: Balance;
     type: string;
     token: string;

@@ -11,7 +11,7 @@ var Gopay = /** @class */ (function () {
         this._http = new http_util_1.Http(this._credentials, props === null || props === void 0 ? void 0 : props.proxy);
         this.auth = new auth_service_1.AuthService(this._http, this._credentials);
         this.customer = new customer_service_1.CustomerService(this._http);
-        this.bank = new bank_service_1.BankService(this._http);
+        this.bank = new bank_service_1.BankService(this._http, this.customer);
     }
     return Gopay;
 }());
